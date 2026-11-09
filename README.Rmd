@@ -46,7 +46,7 @@ registerS3method("knit_print", "pele", envir = asNamespace("knitr"), function(x,
 This package is an R port of [pele](https://github.com/obsidianmd/pele), the
 [Mermaid](https://mermaid.js.org) renderer made by kepano at [Obsidian](https://obsidian.md).
 All the rendering is pele's work. This package runs pele's JavaScript bundle in
-[V8](https://cran.r-project.org/package=V8) and connects its SVG output to Quarto,
+[V8](https://CRAN.R-project.org/package=V8) and connects its SVG output to Quarto,
 R Markdown, Shiny and image files.
 
 Version `r packageVersion("pele")` of the R package bundles pele `r pele_version`. It will be

@@ -12,10 +12,10 @@ This package is an R port of [pele](https://github.com/obsidianmd/pele),
 the [Mermaid](https://mermaid.js.org) renderer made by kepano at
 [Obsidian](https://obsidian.md). All the rendering is pele’s work. This
 package runs pele’s JavaScript bundle in
-[V8](https://cran.r-project.org/package=V8) and connects its SVG output
+[V8](https://CRAN.R-project.org/package=V8) and connects its SVG output
 to Quarto, R Markdown, Shiny and image files.
 
-Version 0.2.0 of the R package bundles pele 1.13.0. It will be updated
+Version 0.2.1 of the R package bundles pele 1.13.0. It will be updated
 as new versions of pele are released upstream, and [NEWS.md](NEWS.md)
 lists the changes.
 

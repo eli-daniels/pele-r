@@ -1,3 +1,7 @@
+# pele 0.2.1
+
+* DESCRIPTION gains `URL` and `BugReports` fields.
+
 # pele 0.2.0
 
 * The package is renamed from peler to pele, and its repository to

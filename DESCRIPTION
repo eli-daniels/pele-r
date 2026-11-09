@@ -1,17 +1,19 @@
 Package: pele
-Title: Render Mermaid Diagrams with 'Pele'
-Version: 0.2.0
+Title: Render 'Mermaid' Diagrams with 'pele'
+Version: 0.2.1
 Authors@R: c(
     person("Eli", "Daniels", , "eli.daniels@ardata.fr", role = c("aut", "cre")),
     person("kepano", role = c("ctb", "cph"), comment = "Author of the bundled 'pele' JavaScript library"),
     person("Lucide Icons and Contributors", role = "cph", comment = "Icon bundled in 'pele'")
   )
-Description: Renders Mermaid diagram text to SVG with the 'pele' JavaScript
+Description: Renders 'Mermaid' diagram text to SVG with the 'pele' JavaScript
     library, run in 'V8'. Diagrams print as inline SVG in HTML documents and
     'shiny' apps, as PDF or PNG figures in other 'knitr' formats, and save to
     SVG, PNG or PDF files. A 'pele' engine for 'knitr' chunks is registered
     when the package loads.
 License: MIT + file LICENSE
+URL: https://github.com/eli-daniels/pele-r
+BugReports: https://github.com/eli-daniels/pele-r/issues
 Depends:
     R (>= 4.4.0)
 Encoding: UTF-8
