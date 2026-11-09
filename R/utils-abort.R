@@ -74,6 +74,13 @@ check_number <- function(x, allow_null = FALSE, arg = rlang::caller_arg(x), call
 }
 
 #' @noRd
+check_bool <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  if (!is.logical(x) || length(x) != 1L || is.na(x)) {
+    pele_abort("{.arg {arg}} must be `TRUE` or `FALSE`, not {.obj_type_friendly {x}}.", call = call)
+  }
+}
+
+#' @noRd
 check_theme <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   if (!is.null(x) && !inherits(x, "pele_theme")) {
     pele_abort(

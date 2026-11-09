@@ -34,6 +34,46 @@ test_that("pele_save() writes SVG and PDF, and scales", {
   expect_equal(dim(png::readPNG(png))[2], round(d$width * 2))
 })
 
+# The pixels of a grob drawn on a white 300 x 300 square, as rows, columns and RGB. The grob
+# is made while the whole square is the viewport, then drawn in its left half, as a
+# patchwork cell would.
+draw_pixels <- function(grob) {
+  file <- withr::local_tempfile(fileext = ".png")
+  grDevices::png(file, width = 300, height = 300, bg = "white")
+  force(grob)
+  grid::pushViewport(grid::viewport(x = 0.25, width = 0.5))
+  grid::grid.draw(grob)
+  grDevices::dev.off()
+  png::readPNG(file)[, , 1:3]
+}
+
+test_that("pele_as_grob() fits the diagram in its viewport and keeps its aspect ratio", {
+  black <- pele_theme(bg = "#000000")
+  fit <- function(grob) {
+    px <- draw_pixels(grob)
+    is_bg <- px[, , 1] + px[, , 2] + px[, , 3] == 0
+    c(width = sum(colSums(is_bg) > 0), height = sum(rowSums(is_bg) > 0))
+  }
+  expected_height <- 150 * d$height / d$width
+  for (raster in c(TRUE, if (requireNamespace("grImport2", quietly = TRUE)) FALSE)) {
+    size <- fit(pele_as_grob(d, theme = black, raster = raster))
+    expect_equal(size[["width"]], 150, tolerance = 0.02)
+    expect_equal(size[["height"]], expected_height, tolerance = 0.05)
+  }
+})
+
+test_that("a raster grob has the diagram's size times scale", {
+  g <- pele_as_grob(d, raster = TRUE, scale = 3)
+  expect_equal(dim(g$raster), round(c(d$height, d$width) * 3))
+})
+
+test_that("a vector grob draws sankey links in their source colours, not black", {
+  skip_if_not_installed("grImport2")
+  sankey <- pele("sankey-beta\nA,B,10\nA,C,5")
+  px <- draw_pixels(pele_as_grob(sankey))
+  expect_false(any(px[, , 1] + px[, , 2] + px[, , 3] == 0))
+})
+
 test_that("pele_save() explains bad arguments", {
   expect_snapshot(error = TRUE, {
     pele_save("flowchart LR", "x.png")

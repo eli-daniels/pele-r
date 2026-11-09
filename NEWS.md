@@ -1,3 +1,9 @@
+# pele 0.2.2
+
+* New `pele_as_grob()` turns a diagram into a grid grob, to lay it out next to
+  plots with patchwork. The grob is vector shapes, through grImport2, or a
+  bitmap with `raster = TRUE`.
+
 # pele 0.2.1
 
 * DESCRIPTION gains `URL` and `BugReports` fields.

@@ -15,7 +15,7 @@ package runs pele’s JavaScript bundle in
 [V8](https://CRAN.R-project.org/package=V8) and connects its SVG output
 to Quarto, R Markdown, Shiny and image files.
 
-Version 0.2.1 of the R package bundles pele 1.13.0. It will be updated
+Version 0.2.2 of the R package bundles pele 1.13.0. It will be updated
 as new versions of pele are released upstream, and [NEWS.md](NEWS.md)
 lists the changes.
 
@@ -199,6 +199,21 @@ d <- pele("flowchart LR\n  A --> B")
 pele_save(d, "diagram.svg")
 pele_save(d, "diagram.png", scale = 2)
 pele_save(d, "diagram.pdf")
+```
+
+## Grobs and patchwork
+
+`pele_as_grob()` turns a diagram into a grid grob, which patchwork lays
+out next to plots. Like a ggplot, the grob is vector shapes, so it stays
+sharp in PDF output. This needs the grImport2 package; `raster = TRUE`
+makes a bitmap instead, without it.
+
+``` r
+library(ggplot2)
+library(patchwork)
+
+p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
+p + pele_as_grob(pele("flowchart TD\n  A[Raw data] --> B[Model] --> C[Plot]"))
 ```
 
 ## Shiny

@@ -232,6 +232,21 @@ pele_save(d, "diagram.png", scale = 2)
 pele_save(d, "diagram.pdf")
 ```
 
+## Grobs and patchwork
+
+`pele_as_grob()` turns a diagram into a grid grob, which patchwork lays out
+next to plots. Like a ggplot, the grob is vector shapes, so it stays sharp in
+PDF output. This needs the grImport2 package; `raster = TRUE` makes a bitmap
+instead, without it.
+
+```r
+library(ggplot2)
+library(patchwork)
+
+p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
+p + pele_as_grob(pele("flowchart TD\n  A[Raw data] --> B[Model] --> C[Plot]"))
+```
+
 ## Shiny
 
 A diagram is HTML, so `renderUI()` is enough. A syntax error shows up in the

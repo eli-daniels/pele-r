@@ -1,6 +1,6 @@
 Package: pele
 Title: Render 'Mermaid' Diagrams with 'pele'
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
     person("Eli", "Daniels", , "eli.daniels@ardata.fr", role = c("aut", "cre")),
     person("kepano", role = c("ctb", "cph"), comment = "Author of the bundled 'pele' JavaScript library"),
@@ -20,6 +20,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports:
     cli,
+    grid,
     htmltools,
     knitr,
     rlang,
@@ -27,6 +28,7 @@ Imports:
     utils,
     V8
 Suggests:
+    grImport2,
     png,
     rmarkdown,
     shiny,

@@ -40,7 +40,103 @@ pele_save <- function(x, file, theme = x$theme, scale = 1) {
     ))
   }
 
-  svg <- resolve_vars(x$svg, theme)
+  svg <- standalone_svg(x$svg, theme)
+  if (ext == "svg") {
+    writeLines(svg, file, useBytes = TRUE)
+    return(invisible(file))
+  }
+  width <- round(x$width * scale)
+  height <- round(x$height * scale)
+  data <- svg_bytes(svg)
+  switch(ext,
+    png = rsvg::rsvg_png(data, file, width = width, height = height),
+    pdf = rsvg::rsvg_pdf(data, file, width = width, height = height)
+  )
+  invisible(file)
+}
+
+# pele_as_grob ----
+
+#' Convert a diagram to a grob
+#'
+#' @description
+#' Turns a diagram into a 'grid' grob, so it can be drawn with
+#' [grid::grid.draw()] and laid out next to plots by packages such as
+#' 'patchwork', which takes a grob added to a plot with `+` or wrapped in
+#' `wrap_elements()`.
+#'
+#' The grob keeps the diagram's aspect ratio and is as large as its
+#' viewport allows.
+#'
+#' By default the grob is made of vector shapes, like a ggplot, so it stays
+#' sharp at any size and in PDF output. Text is drawn as glyph outlines in
+#' the diagram's font, as installed on this computer. This needs the
+#' 'grImport2' package. Sankey links lose their gradients and take the
+#' colour of their source node.
+#'
+#' With `raster = TRUE` the grob is a bitmap. It needs no other package and
+#' keeps sankey gradients, but blurs when drawn larger than its pixel size.
+#'
+#' @param x A diagram from [pele()].
+#' @param theme A [pele_theme()] or `NULL`. Defaults to the diagram's theme.
+#'   With a theme the grob has the theme's background colour. Without one the
+#'   background is transparent.
+#' @param raster Whether to draw the diagram as a bitmap rather than as
+#'   vector shapes.
+#' @param scale Size multiplier of the bitmap, used when `raster = TRUE`. The
+#'   bitmap has the diagram's CSS size in pixels times `scale`.
+#'
+#' @return A grob.
+#' @export
+#' @examples
+#' d <- pele("flowchart LR\n  A --> B")
+#' grid::grid.newpage()
+#' grid::grid.draw(pele_as_grob(d, raster = TRUE))
+#'
+#' if (requireNamespace("grImport2", quietly = TRUE)) {
+#'   grid::grid.newpage()
+#'   grid::grid.draw(pele_as_grob(d))
+#' }
+pele_as_grob <- function(x, theme = x$theme, raster = FALSE, scale = 2) {
+  check_pele(x)
+  check_theme(theme)
+  check_bool(raster)
+  check_number(scale)
+  svg <- standalone_svg(x$svg, theme)
+
+  if (raster) {
+    width <- round(x$width * scale)
+    height <- round(x$height * scale)
+    bitmap <- rsvg::rsvg_nativeraster(svg_bytes(svg), width = width, height = height)
+    return(grid::rasterGrob(bitmap, interpolate = TRUE))
+  }
+
+  rlang::check_installed(
+    "grImport2",
+    reason = "to draw a diagram as vector shapes. Use `raster = TRUE` for a bitmap."
+  )
+  # grImport2 draws gradients only through gridSVG, and paints them black elsewhere. pele
+  # follows each gradient with a plain colour, its fallback, which is used instead.
+  svg <- gsub('fill="url\\(#[^)]+\\) ', 'fill="', svg)
+  # grImport2 reads SVG written by Cairo, as rsvg does, with text as glyph outlines
+  file <- tempfile(fileext = ".svg")
+  on.exit(unlink(file), add = TRUE)
+  rsvg::rsvg_svg(svg_bytes(svg), file)
+  # readPicture() recognises Cairo output by a top-level `<g id="surface...">` that recent
+  # Cairo versions no longer write, so it would warn about a valid file
+  picture <- grImport2::readPicture(file, warn = FALSE)
+  # Delayed, the picture is fitted to the viewport it is drawn in, not to the device open
+  # when the grob is made
+  grImport2::pictureGrob(picture, expansion = 0, delayContent = TRUE)
+}
+
+#' The SVG of a diagram that looks the same outside a web page
+#'
+#' Writes in the values of the CSS variables and, with a theme, paints the
+#' background. Warns about variables only a web page could define.
+#' @noRd
+standalone_svg <- function(svg, theme) {
+  svg <- resolve_vars(svg, theme)
   if (!is.null(theme)) svg <- paint_bg(svg)
   unresolved <- unresolved_vars(svg)
   if (length(unresolved)) {
@@ -50,20 +146,11 @@ pele_save <- function(x, file, theme = x$theme, scale = 1) {
       i = "Give theme values that use {.code var()} a fallback, such as {.code var(--my-fg, #1f1f1f)}."
     ))
   }
-  if (ext == "svg") {
-    writeLines(svg, file, useBytes = TRUE)
-    return(invisible(file))
-  }
-  width <- round(x$width * scale)
-  height <- round(x$height * scale)
-  # rsvg takes a string as a path or URL, never as SVG text, so the SVG goes in as raw bytes
-  data <- charToRaw(enc2utf8(svg))
-  switch(ext,
-    png = rsvg::rsvg_png(data, file, width = width, height = height),
-    pdf = rsvg::rsvg_pdf(data, file, width = width, height = height)
-  )
-  invisible(file)
+  svg
 }
+
+# rsvg takes a string as a path or URL, never as SVG text, so the SVG goes in as raw bytes
+svg_bytes <- function(svg) charToRaw(enc2utf8(svg))
 
 # HTML ----
 
