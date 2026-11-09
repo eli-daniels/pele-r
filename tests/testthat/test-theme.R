@@ -45,6 +45,21 @@ test_that("on a page, a theme hands back only the colours it says to", {
   expect_match(file, "--_bg:#fff", fixed = TRUE)
 })
 
+test_that("a palette in the diagram text takes the place of the theme's series colours", {
+  pie <- c(
+    "---", "config:", "  themeVariables:", "    pie1: '#ff0000'", "---",
+    "pie", '  "A" : 1', '  "B" : 2'
+  )
+  th <- pele_theme(series_1 = "#00ff00", series_2 = "#0000ff")
+  for (page in c(FALSE, TRUE)) {
+    out <- resolve_vars(pele(pie)$svg, th, page = page)
+    expect_match(out, 'fill="#ff0000"', fixed = TRUE)
+    expect_no_match(out, 'fill="#00ff00"', fixed = TRUE)
+    # A series the palette leaves out keeps the theme's colour
+    expect_match(out, 'fill="#0000ff"', fixed = TRUE)
+  }
+})
+
 test_that("as.tags() paints an inherited background with the page's value", {
   d <- pele("flowchart LR\n  A --> B", theme = pele_theme(bg = "inherit"))
   html <- as.character(htmltools::as.tags(d))

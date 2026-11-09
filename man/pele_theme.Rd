@@ -20,7 +20,8 @@ one that contrasts more with the fill.
 \item \code{border}: node outlines
 \item \code{accent}: highlights
 \item \code{critical}: what a diagram marks as critical
-\item \code{series_1} to \code{series_8}: chart series
+\item \code{series_1} to \code{series_8}: chart series. A palette the diagram text
+sets in \code{themeVariables}, such as \code{pie1}, takes their place.
 \item \code{radius}: corner radius, such as \code{"6px"}
 }}
 }

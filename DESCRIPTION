@@ -1,6 +1,6 @@
 Package: peler
 Title: Render Mermaid Diagrams with 'Pele'
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person("Eli", "Daniels", , "eli.daniels@ardata.fr", role = c("aut", "cre")),
     person("kepano", role = c("ctb", "cph"), comment = "Author of the bundled 'pele' JavaScript library"),

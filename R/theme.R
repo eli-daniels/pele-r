@@ -37,7 +37,8 @@
 #'   - `border`: node outlines
 #'   - `accent`: highlights
 #'   - `critical`: what a diagram marks as critical
-#'   - `series_1` to `series_8`: chart series
+#'   - `series_1` to `series_8`: chart series. A palette the diagram text
+#'     sets in `themeVariables`, such as `pie1`, takes their place.
 #'   - `radius`: corner radius, such as `"6px"`
 #'
 #' @return A `pele_theme`: a named character vector of CSS variables.
@@ -122,7 +123,7 @@ print.pele_theme <- function(x, ...) {
 #' librsvg ignores CSS custom property definitions (`--x: ...`) and only reads
 #' the fallback of a `var()`, so 'pele' output rasterises black. A themed
 #' diagram in HTML needs its colours fixed too. This writes the values in:
-#' from `theme` first, then from the definitions in the SVG, then the
+#' from the definitions in the SVG first, then from `theme`, then the
 #' fallback.
 #'
 #' In a file every `var()` with a value or a fallback is resolved. On a web
@@ -145,7 +146,9 @@ resolve_vars <- function(svg, theme = NULL, page = FALSE, call = rlang::caller_e
   # An "inherit" value is not a value: leaving it out of `defs` sends its var() to the
   # pele default in a file, and leaves it live on a page
   inherited <- names(theme)[theme == "inherit"]
-  defs <- c(unclass(theme)[!names(theme) %in% inherited], defs)
+  # The SVG's own definitions come first: a palette set in the diagram text, such as
+  # `pie1`, reaches the SVG as `--pele-series-1` and is fixed, like other diagram styles
+  defs <- c(defs, unclass(theme)[!names(theme) %in% inherited])
 
   # Innermost var() first: its fallback holds no parentheses
   re <- "var\\((--[A-Za-z0-9_-]+)(,[^()]*)?\\)"

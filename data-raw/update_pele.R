@@ -1,7 +1,7 @@
 # Vendors the pele browser bundle into inst/js/. Run from the package root:
 #   Rscript data-raw/update_pele.R
 
-version <- "1.12.0"
+version <- "1.13.0"
 url <- sprintf("https://cdn.jsdelivr.net/npm/pele@%s/dist/pele.global.js", version)
 
 tmp <- tempfile(fileext = ".js")

@@ -23,7 +23,7 @@ The SVG string.
 librsvg ignores CSS custom property definitions (\code{--x: ...}) and only reads
 the fallback of a \code{var()}, so 'pele' output rasterises black. A themed
 diagram in HTML needs its colours fixed too. This writes the values in:
-from \code{theme} first, then from the definitions in the SVG, then the
+from the definitions in the SVG first, then from \code{theme}, then the
 fallback.
 }
 \details{
