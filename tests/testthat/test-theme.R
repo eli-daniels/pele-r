@@ -63,7 +63,7 @@ test_that("a palette in the diagram text takes the place of the theme's series c
 test_that("as.tags() paints an inherited background with the page's value", {
   d <- pele("flowchart LR\n  A --> B", theme = pele_theme(bg = "inherit"))
   html <- as.character(htmltools::as.tags(d))
-  expect_match(html, '<rect class="peler-bg" x="0" y="0" width="[0-9.]+" height="[0-9.]+" fill="var\\(--pele-bg,#fff\\)"/>')
+  expect_match(html, '<rect class="pele-r-bg" x="0" y="0" width="[0-9.]+" height="[0-9.]+" fill="var\\(--pele-bg,#fff\\)"/>')
 })
 
 test_that("resolve_vars() stops on a cycle", {

@@ -1,4 +1,4 @@
 library(testthat)
-library(peler)
+library(pele)
 
-test_check("peler")
+test_check("pele")

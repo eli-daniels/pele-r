@@ -5,11 +5,11 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r setup, include = FALSE}
-library(peler)
+library(pele)
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 # The bundle's first line is pele's banner, "/*! Pele 1.12.0 | MIT License | ..."
-banner <- readLines(system.file("js", "pele.global.js", package = "peler"), n = 1)
+banner <- readLines(system.file("js", "pele.global.js", package = "pele"), n = 1)
 pele_version <- regmatches(banner, regexpr("[0-9]+(\\.[0-9]+)+", banner))
 
 # GitHub removes inline SVG from a README, and a diagram saved without a theme has a
@@ -17,7 +17,7 @@ pele_version <- regmatches(banner, regexpr("[0-9]+(\\.[0-9]+)+", banner))
 # diagram prints as a <picture> of two SVG files instead: pele's colours, and dark ones
 # that GitHub picks in dark mode. A themed diagram paints its own background, so it gets
 # one file. The method is registered in knitr's namespace because there R finds it before
-# peler's own method.
+# the package's own method.
 dark <- pele_theme(
   bg = "#0d1117", fg = "#e6e4d9", muted = "#b7b5ac", line = "#cecdc3",
   surface = "#282726", surface_alt = "#343331", border = "#575653"
@@ -37,19 +37,19 @@ registerS3method("knit_print", "pele", envir = asNamespace("knitr"), function(x,
 })
 ```
 
-# peler
+# pele for R
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/eli-daniels/peler/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eli-daniels/peler/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/eli-daniels/pele-r/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eli-daniels/pele-r/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-peler is an R port of [pele](https://github.com/obsidianmd/pele), the
+This package is an R port of [pele](https://github.com/obsidianmd/pele), the
 [Mermaid](https://mermaid.js.org) renderer made by kepano at [Obsidian](https://obsidian.md).
-All the rendering is pele's work. peler runs pele's JavaScript bundle in
+All the rendering is pele's work. This package runs pele's JavaScript bundle in
 [V8](https://cran.r-project.org/package=V8) and connects its SVG output to Quarto,
 R Markdown, Shiny and image files.
 
-peler `r packageVersion("peler")` bundles pele `r pele_version`. peler will be
+Version `r packageVersion("pele")` of the R package bundles pele `r pele_version`. It will be
 updated as new versions of pele are released upstream, and [NEWS.md](NEWS.md)
 lists the changes.
 
@@ -64,12 +64,12 @@ read pele's own documentation at [pele.run](https://pele.run):
 
 ```r
 # install.packages("pak")
-pak::pak("eli-daniels/peler")
+pak::pak("eli-daniels/pele-r")
 ```
 
 ## Quarto
 
-Load peler in a setup chunk. After that, a `pele` chunk renders the Mermaid text it contains:
+Load the package in a setup chunk. After that, a `pele` chunk renders the Mermaid text it contains:
 
 ````markdown
 ---
@@ -81,7 +81,7 @@ format:
 
 ```{r}`r ''`
 #| include: false
-library(peler)
+library(pele)
 ```
 
 ```{pele}`r ''`
@@ -179,7 +179,7 @@ pele draws most Mermaid types. A raw string, `r"(...)"`, keeps the Mermaid text 
 #| label: mindmap
 pele(r"(
 mindmap
-  root((peler))
+  root((pele))
     Quarto
       HTML
       PDF
@@ -239,7 +239,7 @@ output in place of the diagram, with the line and a caret under the mistake.
 
 ```r
 library(shiny)
-library(peler)
+library(pele)
 
 ui <- fluidPage(
   textAreaInput("src", NULL, "flowchart LR\n  A --> B", rows = 4),
@@ -269,7 +269,7 @@ stylesheet sets its colours. This rule makes diagrams follow Quarto's dark mode:
 }
 ```
 
-`pele_theme()` fixes the colours instead. peler writes them into the SVG and
+`pele_theme()` fixes the colours instead. The package writes them into the SVG and
 paints the background, so the diagram looks the same on any page and in any
 file. Variables you leave out keep pele's defaults.
 
@@ -285,7 +285,7 @@ pele("flowchart LR\n  A[Mermaid text] --> B[SVG]", theme = flexoki)
 For every diagram in a document, set the option once:
 
 ```r
-options(peler.theme = flexoki)
+options(pele.theme = flexoki)
 ```
 
 A theme can hand single colours back to the page. `"inherit"` takes the page's
@@ -324,12 +324,12 @@ so it rejects Unicode property escapes such as `\p{L}`. pele uses them once,
 to validate font names. `data-raw/update_pele.R` replaces them with a character
 range when it vendors the bundle.
 - **CSS variables in files.** librsvg, which writes the PNG and PDF files,
-ignores CSS variable definitions, so pele's output would come out black. peler
-writes the colour values into the SVG before converting it.
-- **No `mount()` or zoom.** These need a browser DOM. peler only uses pele's `render()`.
+ignores CSS variable definitions, so pele's output would come out black. The
+package writes the colour values into the SVG before converting it.
+- **No `mount()` or zoom.** These need a browser DOM. The package only uses pele's `render()`.
 
 ## Credits and license
 
-pele is copyright (c) 2026 kepano and is MIT licensed. Its bundle includes one Lucide icon under the ISC license. The bundled file is `inst/js/pele.global.js`, and `inst/COPYRIGHTS` has both notices. peler is MIT licensed.
+pele is copyright (c) 2026 kepano and is MIT licensed. Its bundle includes one Lucide icon under the ISC license. The bundled file is `inst/js/pele.global.js`, and `inst/COPYRIGHTS` has both notices. The R package is MIT licensed.
 
 Report rendering bugs that also happen at [pele.run](https://pele.run) to [pele's issue tracker](https://github.com/obsidianmd/pele/issues). Report problems with the R side here.

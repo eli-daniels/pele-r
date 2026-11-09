@@ -25,7 +25,7 @@
 #'   - `"attributes"`: attribute types, names and keys in ER diagrams
 #'   - `"files"`: file and directory names in tree view diagrams
 #'   - `"messages"`: message text in sequence diagrams
-#' @param theme A [pele_theme()] or `NULL`. Defaults to the `peler.theme`
+#' @param theme A [pele_theme()] or `NULL`. Defaults to the `pele.theme`
 #'   option, so a document can set it once.
 #' @param id Prefix of the ids inside the SVG. The default comes from a hash
 #'   of `text`. See Details.
@@ -79,13 +79,13 @@ pele <- function(text,
                  font_size = NULL,
                  font_family_mono = NULL,
                  monospace = NULL,
-                 theme = getOption("peler.theme"),
+                 theme = getOption("pele.theme"),
                  id = NULL) {
   if (!is.character(text) || anyNA(text)) {
-    peler_abort("{.arg text} must be a character vector without missing values, not {.obj_type_friendly {text}}.")
+    pele_abort("{.arg text} must be a character vector without missing values, not {.obj_type_friendly {text}}.")
   }
   if (!nzchar(trimws(paste(text, collapse = "")))) {
-    peler_abort("{.arg text} can't be empty.")
+    pele_abort("{.arg text} can't be empty.")
   }
   check_string(font_family, allow_null = TRUE)
   check_number(font_size, allow_null = TRUE)
@@ -110,7 +110,7 @@ pele <- function(text,
   # would use it: a NULL font_size draws `font:[object Object]px`
   options <- options[!vapply(options, is.null, logical(1))]
 
-  out <- js_context()$call("peler_render", text, options)
+  out <- js_context()$call("pele_render", text, options)
   if (!isTRUE(out$ok)) abort_render(out)
 
   warn_font_fallback(font_family, "--pele-font", "sans-serif", out$svg)
@@ -148,10 +148,10 @@ warn_font_fallback <- function(family, variable, fallback, svg, arg = rlang::cal
 js_context <- function() {
   if (is.null(the$ctx)) {
     ctx <- V8::v8()
-    ctx$source(system.file("js", "pele.global.js", package = "peler"))
+    ctx$source(system.file("js", "pele.global.js", package = "pele"))
     # Returns errors as values: a thrown PeleError would reach R as a bare message.
     ctx$eval("
-      function peler_render(src, opts) {
+      function pele_render(src, opts) {
         try {
           var r = pele.render(src, opts);
           return { ok: true, svg: r.svg, width: r.width, height: r.height, type: r.type };
@@ -166,16 +166,16 @@ js_context <- function() {
   the$ctx
 }
 
-#' Turn a PeleError, returned as a list by `peler_render()`, into an R error
+#' Turn a PeleError, returned as a list by `pele_render()`, into an R error
 #' @noRd
 abort_render <- function(err, call = rlang::caller_env()) {
   diagram <- if (is.null(err$type)) "the diagram" else paste("the", err$type, "diagram")
   code <- err$code %||% "unknown"
-  class <- paste0("peler_error_", gsub("-", "_", code))
+  class <- paste0("pele_error_", gsub("-", "_", code))
 
-  # Each peler_abort() below ends the function: it signals an error and never returns.
+  # Each pele_abort() below ends the function: it signals an error and never returns.
   if (code == "unsupported-diagram") {
-    peler_abort(
+    pele_abort(
       c(
         "Can't find a diagram type in {.arg text}.",
         i = "The first line names the type, such as {.code flowchart LR} or {.code sequenceDiagram}.",
@@ -186,7 +186,7 @@ abort_render <- function(err, call = rlang::caller_env()) {
   }
   if (code == "limit") {
     # pele's message here names the limit that was hit, and has no snippet to strip
-    peler_abort(
+    pele_abort(
       c(
         "Can't render a diagram this large.",
         x = "{err$message}",
@@ -210,7 +210,7 @@ abort_render <- function(err, call = rlang::caller_env()) {
   snippet <- gsub(" ", intToUtf8(160L), snippet, fixed = TRUE)
 
   where <- if (err$line > 0 && length(snippet)) "On line {err$line}:" else if (err$line > 0) "On line {err$line}, at the end of the text."
-  peler_abort(
+  pele_abort(
     c(
       if (code == "syntax") "Can't parse {diagram}." else "Can't render {diagram}.",
       x = "{message}",

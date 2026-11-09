@@ -27,14 +27,14 @@ pele_save <- function(x, file, theme = x$theme, scale = 1) {
   check_number(scale)
   ext <- tolower(sub("^.*\\.", "", basename(file)))
   if (!ext %in% c("svg", "png", "pdf")) {
-    peler_abort(c(
+    pele_abort(c(
       "{.arg file} must end in {.file .svg}, {.file .png} or {.file .pdf}.",
       x = "{.file {file}} ends in {.file .{ext}}."
     ))
   }
   # rsvg fails on a missing folder too, but only says "cannot open the connection"
   if (!dir.exists(dirname(file))) {
-    peler_abort(c(
+    pele_abort(c(
       "Can't write {.file {file}}.",
       x = "The folder {.path {dirname(file)}} doesn't exist."
     ))
@@ -76,7 +76,7 @@ pele_save <- function(x, file, theme = x$theme, scale = 1) {
 as.tags.pele <- function(x, ...) {
   svg <- x$svg
   if (!is.null(x$theme)) svg <- paint_bg(resolve_vars(svg, x$theme, page = TRUE))
-  htmltools::div(class = "peler", htmltools::HTML(svg))
+  htmltools::div(class = "pele-r", htmltools::HTML(svg))
 }
 
 #' Paint the background of a resolved SVG
@@ -93,7 +93,7 @@ paint_bg <- function(svg) {
   bg <- regmatches(svg, regexpr("(?<=--_bg:)[^;\"]+", svg, perl = TRUE))
   box <- strsplit(regmatches(svg, regexpr('(?<=viewBox=")[^"]+', svg, perl = TRUE)), " ")[[1]]
   rect <- sprintf(
-    '<rect class="peler-bg" x="%s" y="%s" width="%s" height="%s" fill="%s"/>',
+    '<rect class="pele-r-bg" x="%s" y="%s" width="%s" height="%s" fill="%s"/>',
     box[1], box[2], box[3], box[4], bg
   )
   sub("(<svg[^>]*>)", paste0("\\1", rect), svg)

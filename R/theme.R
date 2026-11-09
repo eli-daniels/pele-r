@@ -23,7 +23,7 @@
 #' In files and non-HTML documents there is no page, so `"inherit"` gives the
 #' 'pele' default and a `var()` gives its fallback.
 #'
-#' Set a theme for every diagram with `options(peler.theme = pele_theme(...))`.
+#' Set a theme for every diagram with `options(pele.theme = pele_theme(...))`.
 #'
 #' @param ... Named CSS values, or `"inherit"`. The names are the 'pele'
 #'   variables without their `--pele-` prefix, with `_` for `-`:
@@ -55,7 +55,7 @@ pele_theme <- function(...) {
 
   unnamed <- which(!nzchar(nms))
   if (length(unnamed)) {
-    peler_abort(c(
+    pele_abort(c(
       "All values in {.arg ...} must be named.",
       x = "Value{?s} {unnamed} {?is/are} unnamed.",
       i = "Name each value after a theme variable, such as {.code fg = \"#100f0f\"}."
@@ -64,16 +64,16 @@ pele_theme <- function(...) {
 
   unknown <- setdiff(nms, theme_names)
   if (length(unknown)) {
-    peler_abort(c(
+    pele_abort(c(
       "Can't use unknown theme variable{?s} {.val {unknown}}.",
       bullets(did_you_mean(unknown, theme_names), "i"),
-      i = "See {.help peler::pele_theme} for the variables."
+      i = "See {.help pele::pele_theme} for the variables."
     ))
   }
 
   bad <- nms[!vapply(values, function(v) is.character(v) && length(v) == 1L && !is.na(v), logical(1))]
   if (length(bad)) {
-    peler_abort(c(
+    pele_abort(c(
       "Theme values must be single strings.",
       bullets(vapply(bad, function(n) cli::format_inline("{.arg {n}} is {.obj_type_friendly {values[[n]]}}."), ""), "x")
     ))
@@ -83,7 +83,7 @@ pele_theme <- function(...) {
   # A value that could end its declaration would let a theme inject other CSS
   bad <- nms[grepl("[;{}<>\"]", css)]
   if (length(bad)) {
-    peler_abort(c(
+    pele_abort(c(
       "Theme values can't contain semicolons, braces, angle brackets or double quotes.",
       bullets(vapply(bad, function(n) cli::format_inline("{.arg {n}} is {.val {values[[n]]}}."), ""), "x"),
       i = "Each value is one CSS value, such as the colour {.val #205ea6} or the length {.val 6px}."
@@ -169,7 +169,7 @@ resolve_vars <- function(svg, theme = NULL, page = FALSE, call = rlang::caller_e
       svg <- gsub(hits[i], value, svg, fixed = TRUE)
     }
   }
-  peler_abort(
+  pele_abort(
     c(
       "Can't resolve the CSS variables of the diagram.",
       x = "They refer to each other in a cycle.",

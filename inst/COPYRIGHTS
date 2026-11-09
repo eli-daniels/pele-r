@@ -1,4 +1,4 @@
-peler bundles the 'pele' JavaScript library in inst/js/pele.global.js.
+This R package bundles the 'pele' JavaScript library in inst/js/pele.global.js.
 
 Source: https://github.com/obsidianmd/pele (unminified TypeScript in src/)
 Published bundle: https://cdn.jsdelivr.net/npm/pele/dist/pele.global.js

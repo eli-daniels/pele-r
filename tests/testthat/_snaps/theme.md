@@ -13,7 +13,7 @@
       Error in `pele_theme()`:
       ! Can't use unknown theme variables "surfce" and "colour".
       i Did you mean "surface" for "surfce"?
-      i See `?peler::pele_theme()` for the variables.
+      i See `?pele::pele_theme()` for the variables.
     Code
       pele_theme(fg = 1, bg = c("a", "b"))
     Condition

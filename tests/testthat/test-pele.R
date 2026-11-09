@@ -56,8 +56,8 @@ test_that("pele() warns when pele rejects the font family", {
 })
 
 test_that("render errors have a class per pele error code", {
-  expect_error(pele("not a diagram"), class = "peler_error_unsupported_diagram")
-  expect_error(pele("sequenceDiagram\n  Alice ->> : hi"), class = "peler_error_syntax")
+  expect_error(pele("not a diagram"), class = "pele_error_unsupported_diagram")
+  expect_error(pele("sequenceDiagram\n  Alice ->> : hi"), class = "pele_error_syntax")
 })
 
 test_that("an error message is one plain string, which shiny can print", {

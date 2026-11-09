@@ -10,7 +10,7 @@ pele(
   font_size = NULL,
   font_family_mono = NULL,
   monospace = NULL,
-  theme = getOption("peler.theme"),
+  theme = getOption("pele.theme"),
   id = NULL
 )
 }
@@ -34,7 +34,7 @@ Arial can overflow its boxes.}
 \item \code{"messages"}: message text in sequence diagrams
 }}
 
-\item{theme}{A \code{\link[=pele_theme]{pele_theme()}} or \code{NULL}. Defaults to the \code{peler.theme}
+\item{theme}{A \code{\link[=pele_theme]{pele_theme()}} or \code{NULL}. Defaults to the \code{pele.theme}
 option, so a document can set it once.}
 
 \item{id}{Prefix of the ids inside the SVG. The default comes from a hash

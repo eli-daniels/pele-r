@@ -51,14 +51,14 @@ test_that("pele_save() warns about CSS variables only a web page could define", 
 
 test_that("as.tags() keeps CSS variables, unless a theme fixes the colours", {
   plain <- as.character(htmltools::as.tags(pele("flowchart LR\n  A --> B")))
-  expect_match(plain, '<div class="peler"><svg ', fixed = TRUE)
+  expect_match(plain, '<div class="pele-r"><svg ', fixed = TRUE)
   expect_match(plain, "var(--pele-fg", fixed = TRUE)
 
   th <- pele_theme(fg = "#100f0f", bg = "#fffcf0")
   themed <- as.character(htmltools::as.tags(pele("flowchart LR\n  A --> B", theme = th)))
   expect_no_match(themed, "var(", fixed = TRUE)
   expect_match(themed, "#100f0f", fixed = TRUE)
-  expect_match(themed, '<rect class="peler-bg" [^>]*fill="#fffcf0"/>')
+  expect_match(themed, '<rect class="pele-r-bg" [^>]*fill="#fffcf0"/>')
 })
 
 # Knits a pele chunk to markdown as if for the given pandoc format

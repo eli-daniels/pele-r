@@ -49,7 +49,7 @@ CSS on \code{.pele}, or the 'pele' default if the page sets none.
 In files and non-HTML documents there is no page, so \code{"inherit"} gives the
 'pele' default and a \code{var()} gives its fallback.
 
-Set a theme for every diagram with \code{options(peler.theme = pele_theme(...))}.
+Set a theme for every diagram with \code{options(pele.theme = pele_theme(...))}.
 }
 \examples{
 flexoki <- pele_theme(bg = "#fffcf0", fg = "#100f0f", accent = "#205ea6")

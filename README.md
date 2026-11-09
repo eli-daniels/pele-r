@@ -1,22 +1,23 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# peler
+# pele for R
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/eli-daniels/peler/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eli-daniels/peler/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/eli-daniels/pele-r/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eli-daniels/pele-r/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-peler is an R port of [pele](https://github.com/obsidianmd/pele), the
-[Mermaid](https://mermaid.js.org) renderer made by kepano at
-[Obsidian](https://obsidian.md). All the rendering is pele’s work. peler
-runs pele’s JavaScript bundle in
+This package is an R port of [pele](https://github.com/obsidianmd/pele),
+the [Mermaid](https://mermaid.js.org) renderer made by kepano at
+[Obsidian](https://obsidian.md). All the rendering is pele’s work. This
+package runs pele’s JavaScript bundle in
 [V8](https://cran.r-project.org/package=V8) and connects its SVG output
 to Quarto, R Markdown, Shiny and image files.
 
-peler 0.1.2 bundles pele 1.13.0. peler will be updated as new versions
-of pele are released upstream, and [NEWS.md](NEWS.md) lists the changes.
+Version 0.2.0 of the R package bundles pele 1.13.0. It will be updated
+as new versions of pele are released upstream, and [NEWS.md](NEWS.md)
+lists the changes.
 
 For the diagram syntax, the supported diagram types and the theming
 variables, read pele’s own documentation at
@@ -31,13 +32,13 @@ variables, read pele’s own documentation at
 
 ``` r
 # install.packages("pak")
-pak::pak("eli-daniels/peler")
+pak::pak("eli-daniels/pele-r")
 ```
 
 ## Quarto
 
-Load peler in a setup chunk. After that, a `pele` chunk renders the
-Mermaid text it contains:
+Load the package in a setup chunk. After that, a `pele` chunk renders
+the Mermaid text it contains:
 
 ```` markdown
 ---
@@ -49,7 +50,7 @@ format:
 
 ```{r}
 #| include: false
-library(peler)
+library(pele)
 ```
 
 ```{pele}
@@ -143,7 +144,7 @@ Mermaid text as it is written in a `pele` chunk:
 ``` r
 pele(r"(
 mindmap
-  root((peler))
+  root((pele))
     Quarto
       HTML
       PDF
@@ -208,7 +209,7 @@ mistake.
 
 ``` r
 library(shiny)
-library(peler)
+library(pele)
 
 ui <- fluidPage(
   textAreaInput("src", NULL, "flowchart LR\n  A --> B", rows = 4),
@@ -239,9 +240,9 @@ Quarto’s dark mode:
 }
 ```
 
-`pele_theme()` fixes the colours instead. peler writes them into the SVG
-and paints the background, so the diagram looks the same on any page and
-in any file. Variables you leave out keep pele’s defaults.
+`pele_theme()` fixes the colours instead. The package writes them into
+the SVG and paints the background, so the diagram looks the same on any
+page and in any file. Variables you leave out keep pele’s defaults.
 
 ``` r
 flexoki <- pele_theme(
@@ -256,7 +257,7 @@ pele("flowchart LR\n  A[Mermaid text] --> B[SVG]", theme = flexoki)
 For every diagram in a document, set the option once:
 
 ``` r
-options(peler.theme = flexoki)
+options(pele.theme = flexoki)
 ```
 
 A theme can hand single colours back to the page. `"inherit"` takes the
@@ -298,17 +299,17 @@ pele(text, monospace = c("members", "messages"), font_family_mono = "Fira Code")
   them with a character range when it vendors the bundle.
 - **CSS variables in files.** librsvg, which writes the PNG and PDF
   files, ignores CSS variable definitions, so pele’s output would come
-  out black. peler writes the colour values into the SVG before
+  out black. The package writes the colour values into the SVG before
   converting it.
-- **No `mount()` or zoom.** These need a browser DOM. peler only uses
-  pele’s `render()`.
+- **No `mount()` or zoom.** These need a browser DOM. The package only
+  uses pele’s `render()`.
 
 ## Credits and license
 
 pele is copyright (c) 2026 kepano and is MIT licensed. Its bundle
 includes one Lucide icon under the ISC license. The bundled file is
-`inst/js/pele.global.js`, and `inst/COPYRIGHTS` has both notices. peler
-is MIT licensed.
+`inst/js/pele.global.js`, and `inst/COPYRIGHTS` has both notices. The R
+package is MIT licensed.
 
 Report rendering bugs that also happen at [pele.run](https://pele.run)
 to [pele’s issue tracker](https://github.com/obsidianmd/pele/issues).
